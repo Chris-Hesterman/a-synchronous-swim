@@ -1,5 +1,4 @@
-(function() {
-
+(function () {
   const serverUrl = 'http://127.0.0.1:3000';
 
   //
@@ -11,24 +10,38 @@
   // Note: remember to fix the URL below.
   /////////////////////////////////////////////////////////////////////
 
+  // var reqInterval = () => {
+  //   $.get(serverUrl)
+  //     .done((data) => console.log('data: ', data))
+  //     .fail(console.log('test failed'));
+  // };
+
+  let myInterval = setInterval(() => {
+    var response = $.get(serverUrl);
+    response.done((data) => SwimTeam.move(data));
+    response.fail(() => {
+      console.log('test failed');
+    });
+  }, 1000);
+
   const ajaxFileUplaod = (file) => {
     var formData = new FormData();
     formData.append('file', file);
     $.ajax({
       type: 'POST',
       data: formData,
-      url: 'FILL_ME_IN',
+      url: serverUrl,
       cache: false,
       contentType: false,
       processData: false,
       success: () => {
         // reload the page
         window.location = window.location.href;
-      }
+      },
     });
   };
 
-  $('form').on('submit', function(e) {
+  $('form').on('submit', function (e) {
     e.preventDefault();
 
     var form = $('form .file')[0];
@@ -45,5 +58,4 @@
 
     ajaxFileUplaod(file);
   });
-
 })();
