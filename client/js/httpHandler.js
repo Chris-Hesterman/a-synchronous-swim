@@ -22,7 +22,7 @@
     response.fail(() => {
       console.log('test failed');
     });
-  }, 1000);
+  }, 100);
 
   const ajaxFileUplaod = (file) => {
     var formData = new FormData();

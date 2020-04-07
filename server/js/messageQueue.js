@@ -1,5 +1,5 @@
-const messages = []; // the storage unit for messages
-
+const messages = ['up']; // the storage unit for messages
+// module.exports.messages = messages;
 module.exports.enqueue = (message) => {
   console.log(`Enqueing message: ${message}`);
   messages.push(message);
