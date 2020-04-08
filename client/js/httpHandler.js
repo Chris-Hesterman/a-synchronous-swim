@@ -10,11 +10,11 @@
   // Note: remember to fix the URL below.
   /////////////////////////////////////////////////////////////////////
 
-  // var reqInterval = () => {
-  //   $.get(serverUrl)
-  //     .done((data) => console.log('data: ', data))
-  //     .fail(console.log('test failed'));
-  // };
+  var reqInterval = () => {
+    $.get(serverUrl)
+      .done((data) => console.log('data: ', data))
+      .fail(console.log('test failed'));
+  };
 
   let myInterval = setInterval(() => {
     var response = $.get(serverUrl);
@@ -22,7 +22,7 @@
     response.fail(() => {
       console.log('test failed');
     });
-  }, 100);
+  }, 1000);
 
   const ajaxFileUplaod = (file) => {
     var formData = new FormData();

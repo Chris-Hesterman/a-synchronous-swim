@@ -16,6 +16,20 @@ module.exports.initialize = (queue) => {
 
 module.exports.router = (req, res, next = () => {}) => {
   console.log('Serving request type ' + req.method + ' for url ' + req.url);
+
+  fs.readFile(module.exports.backgroundImageFile, (err, data) => {
+    if (err) {
+      console.log('this is the error from fs.readFile: ');
+      res.writeHead(404, headers);
+      res.end();
+      next();
+    } else {
+      // console.log('successful fs.readFile')
+      res.writeHead(200, headers);
+      // res.write(data)
+      res.end();
+    }
+  });
   res.writeHead(200, headers);
   // var directions = ['up', 'down', 'left', 'right'];
   // var randomDirection = directions[Math.floor(Math.random() * 4)];
