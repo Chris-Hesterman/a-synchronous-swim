@@ -17,27 +17,48 @@ module.exports.initialize = (queue) => {
 module.exports.router = (req, res, next = () => {}) => {
   console.log('Serving request type ' + req.method + ' for url ' + req.url);
 
-  fs.readFile(module.exports.backgroundImageFile, (err, data) => {
-    if (err) {
-      console.log('this is the error from fs.readFile: ');
-      res.writeHead(404, headers);
-      res.end();
-      next();
-    } else {
-      // console.log('successful fs.readFile')
+  if (req.method === 'GET') {
+    if (req.url === '/') {
+      var dequeue = mess.dequeue();
+
       res.writeHead(200, headers);
-      // res.write(data)
+      if (dequeue) {
+        console.log(dequeue);
+
+        res.write(dequeue);
+      }
       res.end();
     }
-  });
-  res.writeHead(200, headers);
-  // var directions = ['up', 'down', 'left', 'right'];
-  // var randomDirection = directions[Math.floor(Math.random() * 4)];
-  var dequeue = mess.dequeue();
-  if (req.method === 'GET' && dequeue) {
-    console.log(dequeue);
-    res.write(dequeue);
+    if (fs.existsSync(`.${req.url}`)) {
+      console.log('background image path does exist');
+      fs.readFile('background.jpg', (err, data) => {
+        if (err) {
+          // res.writeHead(404, headers);
+          // res.end();
+          throw err;
+        }
+        console.log('successful fs.readFile');
+        console.log(data);
+        res.writeHead(200, headers, { 'Content-Type': 'image/jpeg' }).end(data);
+      });
+    } else {
+      res.writeHead(404, headers);
+      res.end();
+    }
+
+    // res.end();
+    if (req.method === 'OPTIONS') {
+      res.writeHead(200, headers);
+      res.end();
+    } else {
+      res.writeHead(404, headers);
+      res.end();
+    }
   }
-  res.end();
+
   next(); // invoke next() at the end of a request to help with testing!
 };
+
+// res.writeHead(200, headers);
+// var directions = ['up', 'down', 'left', 'right'];
+// var randomDirection = directions[Math.floor(Math.random() * 4)];
