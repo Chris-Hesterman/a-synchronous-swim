@@ -28,32 +28,40 @@ module.exports.router = (req, res, next = () => {}) => {
         res.write(dequeue);
       }
       res.end();
+      next();
     }
-    if (fs.existsSync(`.${req.url}`)) {
-      console.log('background image path does exist');
-      fs.readFile('background.jpg', (err, data) => {
+    if (req.url === '/background.jpg') {
+      // console.log('background image path does exist');
+      fs.readFile(module.exports.backgroundImageFile, (err, data) => {
         if (err) {
-          // res.writeHead(404, headers);
-          // res.end();
-          throw err;
+          res.writeHead(404, headers);
+          // throw err;
+        } else {
+          res.writeHead(200, headers, { 'Content-Type': 'image/jpeg' });
+          res.write(data);
         }
-        console.log('successful fs.readFile');
-        console.log(data);
-        res.writeHead(200, headers, { 'Content-Type': 'image/jpeg' }).end(data);
+        res.end();
+        next();
       });
+
+      // res.writeHead(200, headers);
+      // res.end();
     } else {
       res.writeHead(404, headers);
       res.end();
+      next();
     }
 
     // res.end();
-    if (req.method === 'OPTIONS') {
-      res.writeHead(200, headers);
-      res.end();
-    } else {
-      res.writeHead(404, headers);
-      res.end();
-    }
+    // else {
+    //   res.writeHead(404, headers);
+    //   res.end();
+    // }
+  }
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200, headers);
+    res.end();
+    next();
   }
 
   next(); // invoke next() at the end of a request to help with testing!
