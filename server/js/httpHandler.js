@@ -19,44 +19,29 @@ module.exports.router = (req, res, next = () => {}) => {
 
   if (req.method === 'GET') {
     if (req.url === '/') {
-      var dequeue = mess.dequeue();
+      var dequeue = mess.dequeue() || 'up';
 
       res.writeHead(200, headers);
-      if (dequeue) {
-        console.log(dequeue);
-
-        res.write(dequeue);
-      }
+      res.write(dequeue);
       res.end();
       next();
-    }
-    if (req.url === '/background.jpg') {
-      // console.log('background image path does exist');
-      fs.readFile(module.exports.backgroundImageFile, (err, data) => {
-        if (err) {
-          res.writeHead(404, headers);
-          // throw err;
-        } else {
-          res.writeHead(200, headers, { 'Content-Type': 'image/jpeg' });
-          res.write(data);
-        }
-        res.end();
-        next();
-      });
-
-      // res.writeHead(200, headers);
-      // res.end();
+    } else if (
+      req.url === '/background.jpg' &&
+      fs.existsSync(module.exports.backgroundImageFile)
+    ) {
+      var backgroundImageData = fs.readFileSync(
+        module.exports.backgroundImageFile
+      );
+      res.writeHead(200, headers, { 'Content-Type': 'image/jpeg' });
+      res.write(backgroundImageData);
+      res.end();
+      next();
     } else {
+      console.log('line 51');
       res.writeHead(404, headers);
       res.end();
       next();
     }
-
-    // res.end();
-    // else {
-    //   res.writeHead(404, headers);
-    //   res.end();
-    // }
   }
   if (req.method === 'OPTIONS') {
     res.writeHead(200, headers);
@@ -64,9 +49,31 @@ module.exports.router = (req, res, next = () => {}) => {
     next();
   }
 
-  next(); // invoke next() at the end of a request to help with testing!
+  // next(); // invoke next() at the end of a request to help with testing!
 };
 
 // res.writeHead(200, headers);
 // var directions = ['up', 'down', 'left', 'right'];
 // var randomDirection = directions[Math.floor(Math.random() * 4)];
+
+// console.log('background image path does exist');
+// fs.readFile(module.exports.backgroundImageFile, (err, data) => {
+//   if (err) {
+//     res.writeHead(404, headers);
+//     // throw err;
+//   } else {
+//     res.writeHead(200, headers, { 'Content-Type': 'image/jpeg' });
+//     res.write(data);
+//   }
+//   res.end();
+//   next();
+// });
+
+// res.writeHead(200, headers);
+// res.end();
+
+// res.end();
+// else {
+//   res.writeHead(404, headers);
+//   res.end();
+// }
