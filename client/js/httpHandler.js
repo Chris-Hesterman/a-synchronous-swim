@@ -35,7 +35,8 @@
       contentType: false,
       processData: false,
       success: () => {
-        // reload the page
+        $('.pool').removeClass('background');
+        $('.pool').addClass('background');
         window.location = window.location.href;
       },
     });
@@ -51,8 +52,12 @@
     }
 
     var file = form.files[0];
-    if (file.type !== 'image/jpeg') {
-      console.log('Not a jpg file!');
+    if (
+      file.type !== 'image/jpeg' &&
+      file.type !== 'image/png' &&
+      file.type !== 'image/gif'
+    ) {
+      console.log('Not a jpg, gif, or png file!');
       return;
     }
 
