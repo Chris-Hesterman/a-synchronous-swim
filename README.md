@@ -1,1 +1,2 @@
-# a-synchronous-swim, completed as student at HackReactor
+# a-synchronous-swim 
+completed as student at HackReactor
